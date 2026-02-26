@@ -13,4 +13,8 @@ class Colocation extends Model
     {
         return $this->hasMany(Colocataire::class);
     }
+    public function depenses()
+    {
+        return $this->hasMany(Depense::class);
+    }
 }

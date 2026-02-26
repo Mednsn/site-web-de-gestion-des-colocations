@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Colocataire::class);
     }
+    public function paiement()
+    {
+        return $this->hasMany(Paiement::class);
+    }
+
 }
