@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Foundation\Providers\FoundationServiceProvider;
 use Illuminate\Notifications\Notifiable;
@@ -25,7 +26,7 @@ class User extends Authenticatable
         'reoutation',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
     /**
@@ -54,5 +55,15 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return  $this->role === 'admin';
+    }
+
+    public function role()
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function colocataires()
+    {
+        return $this->hasMany(Colocataire::class);
     }
 }

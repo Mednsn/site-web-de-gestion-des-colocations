@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -37,20 +38,24 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        if (User::exists()) {
-            $role = 'user';
-        } else {
-            $role = 'admin';
+        if (!Role::exists()) {
+            Role::create(['name' => 'admin']);
+            } else {           
+                Role::create(['name' => 'user']);
         }
-        // dd(!$users);
-        // echo $role;
-        // exit;
+    
+        if (!User::exists()) {
+            $role_id = 1;
+        } else {
+            $role_id = 2;
+        }
+
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $role,
+            'role_id' => $role_id,
         ]);
 
         event(new Registered($user));
