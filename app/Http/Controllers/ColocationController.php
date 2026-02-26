@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colocataire;
 use App\Models\Colocation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ColocationController extends Controller
 {
@@ -12,7 +14,8 @@ class ColocationController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        return view('front/colocations/index', compact('user'));
     }
 
     /**
@@ -20,7 +23,8 @@ class ColocationController extends Controller
      */
     public function create()
     {
-        //
+        $user = Auth::user();
+        return view('front/colocations/create', compact('user'));
     }
 
     /**
@@ -28,7 +32,24 @@ class ColocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+
+        $colocation = Colocation::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'status' => 'active',
+        ]);
+        
+        Colocataire::create([
+            'is_owner' => true,
+            'is_active' => true,
+            'user_id' => Auth::id(),
+            'colocation_id' => $colocation->id,
+        ]);
+        return redirect(('colocation'));
     }
 
     /**
@@ -52,7 +73,12 @@ class ColocationController extends Controller
      */
     public function update(Request $request, Colocation $colocation)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'status' => 'required',
+        ]);
+        Colocation::updated($validated);
+        return back();
     }
 
     /**
@@ -60,6 +86,7 @@ class ColocationController extends Controller
      */
     public function destroy(Colocation $colocation)
     {
-        //
+        $colocation->delete();
+        return back();
     }
 }
