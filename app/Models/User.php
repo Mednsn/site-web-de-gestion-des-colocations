@@ -52,14 +52,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function isAdmin()
-    {
-        return  $this->role === 'admin';
-    }
-
     public function role()
     {
-        return $this->hasMany(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function colocataires()

@@ -56,11 +56,11 @@
             @auth
             <div>
                 <form action="/logout" method="POST">
-                @csrf
-                <button type="submit"
-                    class="bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold py-3 px-6 rounded-xl shadow-lg shadow-brand-500/30 transition-all hover:scale-105">
-                    desconected
-                </button>
+                    @csrf
+                    <button type="submit"
+                        class="bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold py-3 px-6 rounded-xl shadow-lg shadow-brand-500/30 transition-all hover:scale-105">
+                        desconected
+                    </button>
                 </form>
             </div>
             @else
@@ -119,7 +119,18 @@
                     visuel et entièrement gratuit.
                 </p>
 
+                @if (Route::has('login'))
                 <div class="flex flex-col sm:flex-row gap-4">
+
+                    @auth
+                    <a href="{{ route('colocation.index') }}"
+                        class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg py-4 px-8 rounded-2xl shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-1 text-center flex items-center justify-center gap-2">
+                        Créer une coloc
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                    @else
                     <a href="{{ route('register') }}"
                         class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg py-4 px-8 rounded-2xl shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-1 text-center flex items-center justify-center gap-2">
                         Créer une coloc
@@ -127,7 +138,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
                     </a>
+                    @endauth
                 </div>
+                @endif
 
                 <div class="mt-10 flex items-center gap-4">
                     <div class="flex -space-x-3 overflow-hidden">

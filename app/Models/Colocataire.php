@@ -13,7 +13,7 @@ class Colocataire extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function colocations()
+    public function colocation()
     {
         return $this->belongsTo(Colocation::class);
     }

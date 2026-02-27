@@ -40,8 +40,11 @@ class RegisteredUserController extends Controller
         ]);
         if (!Role::exists()) {
             Role::create(['name' => 'admin']);
-            } else {           
+            } else { 
+                $roles = Role::all();
+                if(count($roles)<2){          
                 Role::create(['name' => 'user']);
+                }
         }
     
         if (!User::exists()) {

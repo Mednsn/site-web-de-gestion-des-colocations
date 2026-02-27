@@ -2,18 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DetaileController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        return view('front/colocations/detaile',compact('user'));
+       $detaille_coloc = $this->selectColocation($request->colocation_id);
+    //    echo $detaille_coloc;exit;    
+        return view('front/colocations/detaile',compact('user','detaille_coloc'));
+    }
+
+    public function selectColocation($colocation_id)
+    {
+        $colocation = Colocation::find($colocation_id);
+        return $colocation;
     }
 
     /**

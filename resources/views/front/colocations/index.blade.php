@@ -95,7 +95,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 space-y-12">
 
                 <!-- Section 1 : Gestion des Catégories (Paramétrage global) -->
-                
+
 
                 <!-- Section 2 : Mes Colocations -->
                 <section>
@@ -105,20 +105,24 @@
                             <p class="text-slate-500 mt-1">Gérez vos collocations actuelles ou rejoignez-en une
                                 nouvelle.</p>
                         </div>
-                        <a href="{{ route('colocation.create') }}"
-                            class="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 text-sm">
-                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Nouvelle Coloc
-                        </a>
+                        @if($nbr_colocation_active < 1)
+                            <a href="{{ route('colocation.create') }}"
+                                class="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 text-sm">
+                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Nouvelle Coloc
+                            </a>
+                            @endif
                     </div>
 
                     <!-- Grille de Colocations -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-2 p-10 border-r-slate-600 rounded-lg gap-6">
 
                         <!-- Coloc Card 1 (Owner) -->
+                        @forelse($colocations as $colocation)
+                        @if($colocation->is_owner == 1)
                         <div
                             class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-brand-200 hover:shadow-md transition-all flex flex-col h-full group relative overflow-hidden">
                             <!-- Déco graphique -->
@@ -139,7 +143,7 @@
                             </div>
 
                             <div class="relative z-10 flex-1">
-                                <h3 class="text-xl font-bold text-slate-900 mb-1">Appart Gambetta</h3>
+                                <h3 class="text-xl font-bold text-slate-900 mb-1">{{ $colocation->name }}</h3>
                                 <div class="flex items-center gap-1.5 text-slate-500 text-sm mb-6">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -151,10 +155,12 @@
                             </div>
 
                             <div class="pt-5 border-t border-slate-100 flex gap-3 relative z-10">
-                                <button
-                                    class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm">
-                                    Accéder au tableau
-                                </button>
+                                @if($colocation->status ==="active")
+                                <a href="{{ route('detaille.index',['colocation_id'=>$colocation->id]) }}"
+                                    class="flex-[3] bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 text-center rounded-lg text-sm transition-colors shadow-sm">
+                                    Accéder
+                                </a>
+                                @endif
                                 <!-- Bouton settings discret -->
                                 <button
                                     class="px-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition-colors"
@@ -171,6 +177,7 @@
                         </div>
 
                         <!-- Coloc Card 2 (Member) -->
+                        @else
                         <div
                             class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all flex flex-col h-full group relative overflow-hidden">
                             <!-- Déco graphique -->
@@ -203,10 +210,12 @@
                             </div>
 
                             <div class="pt-5 border-t border-slate-100 flex gap-3 relative z-10">
+                                @if($colocation->status ==="active")
                                 <a href="{{ route('detaille.index') }}"
                                     class="flex-[3] bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 text-center rounded-lg text-sm transition-colors shadow-sm">
                                     Accéder
                                 </a>
+                                @endif
                                 <!-- Bouton Quitter (rouge) pour un membre -->
                                 <button
                                     class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-2.5 rounded-lg text-sm transition-colors flex justify-center items-center"
@@ -219,7 +228,10 @@
                                 </button>
                             </div>
                         </div>
-
+                        @endif
+                        @empty
+                        <p class="text-gray-400 text-sm"> cree une colocation por gerer votre colocations</p>
+                        @endforelse
                     </div>
                 </section>
 

@@ -103,29 +103,30 @@
                         </svg>
                         Retour aux colocations
                     </a>
-                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Nouvelle Colocation</h2>
-                    <p class="text-slate-500 mt-2 text-lg">Créez un nouvel espace pour gérer les finances de votre
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Modifier Colocation</h2>
+                    <p class="text-slate-500 mt-2 text-lg">Modifier votre espace pour gérer les finances de votre
                         logement partagé.</p>
                 </div>
 
                 <!-- Formulaire -->
                
-                <form action="{{ route('colocation.store') }}" method="POST" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <form action="{{ route('colocation.update',$colocation) }}" method="POST" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
                     @csrf
+                    @method('PUT')
                     <div class="space-y-6">
                         <!-- Nom de la colocation -->
                         <div>
                             <label for="name" class="block text-sm font-semibold text-slate-900 mb-2">Nom de la
                                 colocation <span class="text-red-500">*</span></label>
-                            <input type="text" id="name" name="name" required placeholder="ex: Appart Gambetta"
+                            <input type="text" id="name" name="name" value="{{ $colocation->name }}" required placeholder="ex: Appart Gambetta"
                                 class="w-full rounded-xl border-slate-300 shadow-sm focus:border-brand-500 focus:ring-brand-500 transition-colors sm:text-sm px-4 py-3 border bg-slate-50 focus:bg-white outline-none">
                         </div>
 
                         <!-- Description -->
                         <div>
                             <label for="description" class="block text-sm font-semibold text-slate-900 mb-2">Description
-                               </label>
-                            <textarea id="description" name="description" rows="3"
+                                </label>
+                            <textarea id="description" name="description"  rows="3"
                                 placeholder="Quelques mots sur votre colocation..."
                                 class="w-full rounded-xl border-slate-300 shadow-sm focus:border-brand-500 focus:ring-brand-500 transition-colors sm:text-sm px-4 py-3 border bg-slate-50 focus:bg-white outline-none"></textarea>
                         </div>
@@ -147,7 +148,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Créer la colocation
+                            modifier la colocation
                         </button>
                     </div>
 

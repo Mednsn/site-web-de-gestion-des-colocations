@@ -6,16 +6,45 @@ use App\Models\Colocataire;
 use App\Models\Colocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\Mailer\Transport\Dsn;
 
 class ColocationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+
         $user = Auth::user();
-        return view('front/colocations/index', compact('user'));
+
+        $colocations = $this->selectAllUserColocation();
+        $nbr_colocation_active = $this->selectUserColocation();
+        // dd($nbr_colocation_active);
+        return view('front/colocations/index', compact('user', 'colocations', 'nbr_colocation_active'));
+    }
+
+    public function selectAllUserColocation()
+    {
+        $colocations = DB::table('colocataires')
+            ->join('colocations', 'colocataires.colocation_id', '=', 'colocations.id')
+            ->where('colocataires.user_id', Auth::id())
+            ->select('colocations.*', 'colocataires.is_owner')
+            ->get();
+        return $colocations;
+    }
+
+    public function selectUserColocation()
+    {
+        $Colocation_avtive = DB::table('colocataires')
+            ->join('colocations', 'colocataires.colocation_id', '=', 'colocations.id')
+            ->where('colocataires.user_id', Auth::id())
+            ->where('colocations.status', '=', 'active')
+            ->select('colocations.*', 'colocataires.is_owner')
+            ->get();
+        $nbr_Colocation_avtive = count($Colocation_avtive);
+        return $nbr_Colocation_avtive;
     }
 
     /**
@@ -42,7 +71,7 @@ class ColocationController extends Controller
             'description' => $request->description,
             'status' => 'active',
         ]);
-        
+
         Colocataire::create([
             'is_owner' => true,
             'is_active' => true,
@@ -65,7 +94,8 @@ class ColocationController extends Controller
      */
     public function edit(Colocation $colocation)
     {
-        //
+        $user = Auth::user();
+        return view('front/colocations/edit', compact('user','colocation'));
     }
 
     /**
@@ -73,12 +103,15 @@ class ColocationController extends Controller
      */
     public function update(Request $request, Colocation $colocation)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required',
-            'status' => 'required',
+            'description' => 'required',
         ]);
-        Colocation::updated($validated);
-        return back();
+          $colocation->update([
+            'name'=>$request->name,
+            'description'=>$request->description,
+        ]);
+        return redirect(route('detaille.index',$colocation));
     }
 
     /**

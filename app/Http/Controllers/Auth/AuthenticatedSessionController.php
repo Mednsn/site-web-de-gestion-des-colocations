@@ -27,8 +27,13 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+      if($user->role->name === 'user'){
+        return redirect('/');
+      }else{
+        echo "gaad dashboard admin";exit;
+        return redirect()->intended(route('/'));
+      }
     }
 
     /**
