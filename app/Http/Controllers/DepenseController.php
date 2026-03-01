@@ -12,7 +12,7 @@ class DepenseController extends Controller
      */
     public function index()
     {
-        //
+         echo "xslat depenses";exit;
     }
 
     /**

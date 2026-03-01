@@ -43,7 +43,7 @@
                 <div class="flex justify-between h-16 items-center">
                     <!-- Nav Left -->
                     <div class="flex items-center gap-8">
-                        <a href="index.html" class="flex items-center gap-2 group">
+                        <a href="/" class="flex items-center gap-2 group">
                             <div
                                 class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shadow-sm group-hover:bg-brand-700 transition-colors">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,12 +57,12 @@
 
                         <!-- Desktop Links -->
                         <nav class="hidden md:flex gap-1">
-                            <a href="colocations.html"
+                            <a href="#"
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Mes
                                 Colocations</a>
-                            <a href="expenses.html"
+                            <a href="{{ route('depenses.index') }}"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
-                            <a href="balances.html"
+                            <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
                         </nav>
                     </div>
@@ -95,7 +95,7 @@
 
                 <!-- Header de page avec bouton retour -->
                 <div>
-                    <a href="colocations.html"
+                    <a href="{{ route('colocation.index') }}"
                         class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-4 font-medium">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,7 +145,7 @@
                             class="border-brand-500 text-brand-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Membres & Paramètres
                         </a>
-                        <a href="expenses.html"
+                        <a href="{{ route('depenses.index') }}"
                             class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Dépenses récentes
                         </a>
@@ -167,16 +167,19 @@
                             </div>
 
                             <ul class="divide-y divide-slate-100">
+
                                 <!-- Membre 1 (Moi - Admin/Propriétaire) -->
-                                <li class="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                                @forelse($members_colocation as $member)
+                                @if($member->is_owner == 1)
+                                <li class="p-6 flex items-center justify-between hover:bg-slate-300 transition-colors">
                                     <div class="flex items-center gap-4">
                                         <div
                                             class="h-12 w-12 rounded-full bg-gradient-to-tr from-brand-500 to-emerald-400 text-white flex items-center justify-center font-bold shadow-sm border border-white">
-                                            JD
+                                            {{ mb_substr($member->firstname, 0, 1)  }} {{ mb_substr($member->lastname, 0, 1)  }}
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900">Moi (Jean Dupont)</p>
-                                            <p class="text-sm text-slate-500">jean.dupont@email.com</p>
+                                            <p class="font-bold text-slate-900">Moi : <span class="font-bold text-red-900">{{ $member->firstname }} {{ $member->lastname }}</span></p>
+                                            <p class="text-sm text-slate-500">{{ $member->email }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
@@ -184,21 +187,24 @@
                                             class="bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1 rounded border border-slate-200">Owner</span>
                                     </div>
                                 </li>
-
+                                @else
                                 <!-- Membre 2 -->
-                                <li class="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                                <li class="p-6 flex items-center justify-between hover:bg-slate-200 transition-colors">
                                     <div class="flex items-center gap-4">
                                         <div
                                             class="h-12 w-12 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold border border-white shadow-sm">
-                                            MR
+                                            {{ mb_substr($member->firstname, 0, 1)  }} {{ mb_substr($member->lastname, 0, 1)  }}
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900">Marie Rousseau</p>
-                                            <p class="text-sm text-slate-500">marie.rousseau@email.com</p>
+                                            <p class="font-bold text-slate-900">{{ $member->firstname }} {{ $member->lastname }}</p>
+                                            <p class="text-sm text-slate-500">{{ $member->email }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <button
+                                        <form action="{{ route('colocataire.destroy',$member) }}" method="POST">
+                                            @csrf 
+                                            @method('delete')
+                                        <button type="submit" onclick="return confime('are you sure ?')"
                                             class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
                                             title="Retirer de la coloc">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,33 +213,15 @@
                                                 </path>
                                             </svg>
                                         </button>
+                                        </form>
                                     </div>
                                 </li>
-
+                                @endif
+                                @empty
+                                <p> this no one </p>
+                                @endforelse
                                 <!-- Membre 3 -->
-                                <li class="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="h-12 w-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold border border-white shadow-sm">
-                                            PL
-                                        </div>
-                                        <div>
-                                            <p class="font-bold text-slate-900">Paul Leroy</p>
-                                            <p class="text-sm text-slate-500">paul.leroy@email.com</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <button
-                                            class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
-                                            title="Retirer de la coloc">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </li>
+                              
                             </ul>
                         </div>
 

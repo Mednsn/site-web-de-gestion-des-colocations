@@ -60,6 +60,7 @@ class ColocataireController extends Controller
      */
     public function destroy(Colocataire $colocataire)
     {
-        //
+        echo "est deleted mais faut des condition";exit;
+        $colocataire->delete();
     }
 }
