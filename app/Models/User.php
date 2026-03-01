@@ -57,13 +57,21 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function colocataires()
+    public function colocations()
     {
-        return $this->hasMany(Colocataire::class);
+        return $this->belongsToMany(
+            Colocation::class,
+            'colocataires',
+            'colocation_id',
+            'user_id'
+        )
+            ->using(Colocataire::class)
+            ->as('colocataires')
+            ->withPivot(['id', 'is_owner', 'is_active'])
+            ->withTimestamps();
     }
     public function paiement()
     {
         return $this->hasMany(Paiement::class);
     }
-
 }

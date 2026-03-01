@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colocataire;
+use App\Models\Colocation;
 use App\Models\Depense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DepenseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-         echo "xslat depenses";exit;
-    }
+    public function index(Colocation $colocation) {}
 
     /**
      * Show the form for creating a new resource.
@@ -34,9 +34,17 @@ class DepenseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Depense $depense)
+    public function show(Colocation $colocation)
     {
-        //
+        $user = Auth::user();
+
+        foreach ($colocation->users as $member) {
+            if ($member->id == $user->id) {
+              $isOwner = 1;
+            };
+        }
+
+        return view('front/depenses/depenses', compact('user', 'colocation','isOwner'));
     }
 
     /**

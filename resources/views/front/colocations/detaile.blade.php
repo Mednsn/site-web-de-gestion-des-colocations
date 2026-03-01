@@ -60,7 +60,7 @@
                             <a href="#"
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Mes
                                 Colocations</a>
-                            <a href="{{ route('depenses.index') }}"
+                            <a href="{{ route('depenses.show',$colocation->id) }}"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
                             <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
@@ -112,8 +112,8 @@
                                     A
                                 </div>
                                 <div>
-                                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ $detaille_coloc->name }} </h2>
-                                    <p class="text-slate-500 text-sm mt-0.5">{{ $detaille_coloc->description }}.</p>
+                                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ $colocation->name }} </h2>
+                                    <p class="text-slate-500 text-sm mt-0.5">{{ $colocation->description }}.</p>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                                 Propriétaire
                             </span>
 
-                            <a href="{{ route('colocation.edit',['colocation'=>$detaille_coloc]) }}"
+                            <a href="{{ route('colocation.edit',['colocation'=>$colocation]) }}"
                                 class="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 p-2.5 rounded-xl shadow-sm hover:shadow transition-all"
                                 title="Modifier">
                                 <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor"
@@ -145,7 +145,9 @@
                             class="border-brand-500 text-brand-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Membres & Paramètres
                         </a>
-                        <a href="{{ route('depenses.index') }}"
+                        
+                        <form action=""></form>
+                        <a href="{{ route('depenses.show',$colocation) }}"
                             class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Dépenses récentes
                         </a>
@@ -169,8 +171,11 @@
                             <ul class="divide-y divide-slate-100">
 
                                 <!-- Membre 1 (Moi - Admin/Propriétaire) -->
-                                @forelse($members_colocation as $member)
-                                @if($member->is_owner == 1)
+
+                                @forelse($colocation->users as $member)
+
+                                @if($member->colocataires->is_owner == 1)
+
                                 <li class="p-6 flex items-center justify-between hover:bg-slate-300 transition-colors">
                                     <div class="flex items-center gap-4">
                                         <div
@@ -201,18 +206,18 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <form action="{{ route('colocataire.destroy',$member) }}" method="POST">
-                                            @csrf 
+                                        <form action="{{ route('colocataire.destroy',$member->colocataires) }}" method="POST">
+                                            @csrf
                                             @method('delete')
-                                        <button type="submit" onclick="return confime('are you sure ?')"
-                                            class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
-                                            title="Retirer de la coloc">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
+                                            <button type="submit" onclick="return confime('are you sure ?')"
+                                                class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
+                                                title="Retirer de la coloc">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
                                         </form>
                                     </div>
                                 </li>
@@ -221,7 +226,7 @@
                                 <p> this no one </p>
                                 @endforelse
                                 <!-- Membre 3 -->
-                              
+
                             </ul>
                         </div>
 

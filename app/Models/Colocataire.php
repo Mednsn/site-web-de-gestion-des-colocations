@@ -3,18 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class Colocataire extends Model
+class Colocataire extends Pivot
 {
-    protected $fillable = ['is_owner','is_active','user_id','colocation_id'];
+    protected $table = 'colocataires';
 
-    public function users()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['is_owner', 'is_active', 'user_id', 'colocation_id'];
 
-    public function colocation()
-    {
-        return $this->belongsTo(Colocation::class);
-    }
+    
 }

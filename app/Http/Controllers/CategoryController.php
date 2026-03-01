@@ -12,8 +12,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('categories.index', compact('categories'));
+       //
     }
 
     /**
@@ -31,6 +30,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name'=> 'required',
+            'colocation_id'=> 'required',
         ]);
         Category::created($validated);
         return back();

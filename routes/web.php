@@ -30,11 +30,11 @@ Route::put('colocation/{colocation}/update', [ColocationController::class, 'upda
 Route::get('colocation/{colocation}/edit', [ColocationController::class, 'edit'])->name('colocation.edit');
 Route::get('colocation/{colocation_id}/detaile', [DetaileController::class, 'index'])->name('detaille.index');
 
-// Route::delete('destroy')->name('colocataire.destroy');
-Route::resource('colocataire',ColocataireController::class);
+Route::delete('destroy')->name('colocataire.destroy');
 
 Route::get('depenses',[DepenseController::class,'index'])->name('depenses.index');
 Route::get('depenses/create',[DepenseController::class,'create'])->name('depenses.create');
+Route::get('depenses/{colocation}',[DepenseController::class,'show'])->name('depenses.show');
 Route::get('depenses/store',[DepenseController::class,'store'])->name('depenses.store');
 Route::get('depenses/update',[DepenseController::class,'update'])->name('depenses.update');
 Route::get('depenses/edit',[DepenseController::class,'edit'])->name('depenses.edit');

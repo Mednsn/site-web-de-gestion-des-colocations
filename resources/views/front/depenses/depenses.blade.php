@@ -14,9 +14,18 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
                     colors: {
-                        brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 900: '#14532d' }
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d'
+                        }
                     }
                 }
             }
@@ -34,7 +43,7 @@
                 <div class="flex justify-between h-16 items-center">
                     <!-- Nav Left -->
                     <div class="flex items-center gap-8">
-                        <a href="#" class="flex items-center gap-2 group">
+                        <a href="/" class="flex items-center gap-2 group">
                             <div
                                 class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shadow-sm group-hover:bg-brand-700 transition-colors">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,10 +57,10 @@
 
                         <!-- Desktop Links -->
                         <nav class="hidden md:flex gap-1">
-                            <a href="colocations.html"
+                            <a href="{{ route('colocation.index')}}"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Mes
                                 Colocations</a>
-                            <a href="expenses.html"
+                            <a href="#"
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Dépenses</a>
                             <a href="balances.html"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
@@ -63,7 +72,7 @@
                         <div class="hidden sm:flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
                             <div
                                 class="px-3 py-1 bg-white shadow-sm rounded-md text-sm font-bold text-slate-800 flex items-center gap-2 cursor-pointer">
-                                <span class="w-2 h-2 rounded-full bg-brand-500"></span> Appart Gambetta
+                                <span class="w-2 h-2 rounded-full bg-brand-500"></span> {{ $colocation->name }}
                             </div>
                         </div>
 
@@ -71,7 +80,7 @@
 
                         <div
                             class="h-8 w-8 rounded-full bg-gradient-to-tr from-brand-500 to-emerald-400 text-white flex items-center justify-center font-bold text-sm shadow-sm border border-white cursor-pointer">
-                            JD
+                            {{ mb_substr($user->firstname, 0, 1)}}{{ mb_substr($user->lastname, 0, 1)}}
                         </div>
                     </div>
                 </div>
@@ -82,6 +91,88 @@
         <main class="flex-1 overflow-y-auto w-full pb-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
 
+                @if($isOwner == 1)
+                <div>
+                    <div class="mb-5 flex justify-between items-end">
+                        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Catégories de Dépenses</h2>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 lg:p-8">
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+
+                            <!-- Formulaire d'ajout rapide -->
+                            <div class="w-full md:w-1/3">
+                                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Nouvelle
+                                    catégorie</h3>
+                                <form class="space-y-3" action="{{ route('depenses.store') }}" method="POST">
+                                    <input type="hidden" name="colocation_id" value="{{ $colocation->id }}">
+                                    @csrf 
+                                    <div>
+                                        <label for="cat-name" class="sr-only">Nom</label>
+                                        <input type="text" id="cat-name" placeholder="Ex: Internet, Loyer..."
+                                            class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all font-medium placeholder-slate-400">
+                                    </div>
+                                    <button type="submit"
+                                        class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-lg text-sm shadow-sm transition-all focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        Ajouter la catégorie
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Séparateur visuel sur Desktop -->
+                            <div class="hidden md:block w-px h-32 bg-slate-100 self-center"></div>
+
+                            <!-- Liste des Catégories -->
+                            <div class="flex-1 w-full">
+                                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Catégories
+                                    existantes</h3>
+                                <div class="flex flex-wrap gap-3">
+
+                                    <!-- Catégorie  -->
+                                    @isset($categories)
+                                    @forelse($categories as $category)
+                                    <div
+                                        class="inline-flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 group hover:bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+                                        <span class="px-2 text-sm font-semibold text-slate-700">{{ $category->name }}</span>
+                                        <div class="flex items-center ml-2 border-l border-slate-200 pl-2 gap-1">
+                                            <button
+                                                class="p-1 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
+                                                title="Modifier">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <button
+                                                class="p-1 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors"
+                                                title="Supprimer">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @empty
+                                    <div class="text-sm text-slate-500 italic py-2">Aucune catégorie pour le moment.</div>
+                                    @endforelse
+                                    @endisset
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dépenses</h1>

@@ -32,6 +32,7 @@ class ColocationController extends Controller
             ->where('colocataires.user_id', Auth::id())
             ->select('colocations.*', 'colocataires.is_owner')
             ->get();
+            
         return $colocations;
     }
 
