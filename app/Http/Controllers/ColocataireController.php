@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colocataire;
+use App\Models\Colocation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ColocataireController extends Controller
 {
@@ -28,7 +30,20 @@ class ColocataireController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $colocation = Colocation::whereHas('invitations', function ($query) use ($request) {
+            $query->where('token', $request->token);
+        })->first();
+        if (!Auth::check()) {
+            return redirect(route('register'));
+        }
+        $colocation_id = $colocation->id;
+        Colocataire::create([
+            'is_owner' => false,
+            'is_active' => true,
+            'user_id' => Auth::id(),
+            'colocation_id' => $colocation_id,
+        ]);
+        return redirect()->route('detaille.index', $colocation_id);
     }
 
     /**
@@ -60,7 +75,8 @@ class ColocataireController extends Controller
      */
     public function destroy(Colocataire $colocataire)
     {
-        echo "est deleted mais faut des condition";exit;
+        echo "est deleted mais faut des condition";
+        exit;
         $colocataire->delete();
     }
 }

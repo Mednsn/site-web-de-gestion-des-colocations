@@ -19,9 +19,12 @@ class ColocationController extends Controller
 
         $user = Auth::user();
 
-        $colocations = $this->selectAllUserColocation();
-        $nbr_colocation_active = $this->selectUserColocation();
-        // dd($nbr_colocation_active);
+        // $colocations = $this->selectAllUserColocation();
+        $colocations = Colocation::whereHas('users', function ($query) use($user) {
+            $query->where('users.id',  $user->id);
+        })->with('users')->first();
+        // dd($colocations);
+        // $nbr_colocation_active = $this->selectUserColocation();
         return view('front/colocations/index', compact('user', 'colocations', 'nbr_colocation_active'));
     }
 
@@ -32,7 +35,7 @@ class ColocationController extends Controller
             ->where('colocataires.user_id', Auth::id())
             ->select('colocations.*', 'colocataires.is_owner')
             ->get();
-            
+
         return $colocations;
     }
 
@@ -96,7 +99,7 @@ class ColocationController extends Controller
     public function edit(Colocation $colocation)
     {
         $user = Auth::user();
-        return view('front/colocations/edit', compact('user','colocation'));
+        return view('front/colocations/edit', compact('user', 'colocation'));
     }
 
     /**
@@ -108,11 +111,11 @@ class ColocationController extends Controller
             'name' => 'required',
             'description' => 'required',
         ]);
-          $colocation->update([
-            'name'=>$request->name,
-            'description'=>$request->description,
+        $colocation->update([
+            'name' => $request->name,
+            'description' => $request->description,
         ]);
-        return redirect(route('detaille.index',$colocation));
+        return redirect(route('detaille.index', $colocation));
     }
 
     /**

@@ -45,6 +45,8 @@ Route::delete('categories/{category}',[CategoryController::class,'destroy'])->na
 Route::patch('categories/{category}',[CategoryController::class,'update'])->name('categories.update');
 
 Route::post('invitations/{colocation}',[InvitationController::class,'store'])->name('invitation.store');
-Route::get('invitations',[InvitationController::class,'index'])->name('invitation.index');
+Route::get('invitations/{token}',[InvitationController::class,'index'])->name('invitation.index');
+
+Route::post('acceptation',[ColocataireController::class,'store'])->name('coloctaire.store');
 
 require __DIR__ . '/auth.php';

@@ -57,8 +57,11 @@ class DepenseController extends Controller
         foreach ($colocation->users as $member) {
             if ($member->id == $user->id) {
               $isOwner = 1;
-            };
-        }
+            }else{
+              $isOwner = 0;
+            }
+            
+        };
         $colocations = Colocation::with('users','depenses','categories')->where('colocations.id',$colocation->id)->first();
 
     // foreach($colocations->depenses as $depense ){

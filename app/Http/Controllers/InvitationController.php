@@ -15,9 +15,9 @@ class InvitationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($token)
     {
-        return view('front/invitation/invitations');
+       return  view('front.invitation.invitations',compact('token'));
     }
 
     /**
@@ -43,7 +43,7 @@ class InvitationController extends Controller
             $validated['colocation_id'] = $colocation->id;
             
             Mail::to($validated['email'])->send(new InvitationMail($validated['token']));
-
+            
             Invitation::create($validated);
 
         return back();

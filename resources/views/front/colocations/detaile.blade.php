@@ -183,7 +183,7 @@
                                             {{ mb_substr($member->firstname, 0, 1)  }} {{ mb_substr($member->lastname, 0, 1)  }}
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900">Moi : <span class="font-bold text-red-900">{{ $member->firstname }} {{ $member->lastname }}</span></p>
+                                            <p class="font-bold text-slate-900"><span class="font-bold text-red-900">{{ $member->firstname }} {{ $member->lastname }}</span></p>
                                             <p class="text-sm text-slate-500">{{ $member->email }}</p>
                                         </div>
                                     </div>
