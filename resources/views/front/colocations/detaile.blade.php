@@ -256,13 +256,14 @@
                                 <p class="text-sm text-slate-500 mb-5">Ajoutez un nouveau membre pour qu'il puisse
                                     participer aux dépenses.</p>
 
-                                <form class="space-y-4">
+                                <form class="space-y-4" method="POST" action="{{ route('invitation.store',$colocation) }}">
+                                    @csrf
                                     <div>
                                         <label for="email" class="sr-only">Adresse email</label>
-                                        <input type="email" id="email" required placeholder="adresse@email.com"
+                                        <input type="email" name="email" required placeholder="adresse@email.com"
                                             class="w-full rounded-xl border-slate-300 shadow-sm focus:border-brand-500 focus:ring-brand-500 transition-colors sm:text-sm px-4 py-2.5 border bg-slate-50 focus:bg-white outline-none">
                                     </div>
-                                    <button type="button"
+                                    <button type="submit" 
                                         class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl transition-colors shadow-sm flex justify-center items-center gap-2">
                                         Envoyer l'invitation
                                     </button>

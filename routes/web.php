@@ -5,6 +5,7 @@ use App\Http\Controllers\ColocataireController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\DetaileController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,5 +44,7 @@ Route::post('categories/store',[CategoryController::class,'store'])->name('categ
 Route::delete('categories/{category}',[CategoryController::class,'destroy'])->name('categories.destroy');
 Route::patch('categories/{category}',[CategoryController::class,'update'])->name('categories.update');
 
-// Route::get('balences',[]);
+Route::post('invitations/{colocation}',[InvitationController::class,'store'])->name('invitation.store');
+Route::get('invitations',[InvitationController::class,'index'])->name('invitation.index');
+
 require __DIR__ . '/auth.php';
