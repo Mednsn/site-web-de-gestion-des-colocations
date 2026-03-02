@@ -97,19 +97,19 @@
                         <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Catégories de Dépenses</h2>
                     </div>
 
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 lg:p-8">
+                    <div class="bg-black/15 rounded-2xl shadow-sm border border-slate-200 p-6 lg:p-8">
                         <div class="flex flex-col md:flex-row gap-8 items-start">
 
                             <!-- Formulaire d'ajout rapide -->
                             <div class="w-full md:w-1/3">
                                 <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Nouvelle
                                     catégorie</h3>
-                                <form class="space-y-3" action="{{ route('depenses.store') }}" method="POST">
+                                <form class="space-y-3" action="{{ route('categories.store') }}" method="POST">
+                                    @csrf
                                     <input type="hidden" name="colocation_id" value="{{ $colocation->id }}">
-                                    @csrf 
                                     <div>
-                                        <label for="cat-name" class="sr-only">Nom</label>
-                                        <input type="text" id="cat-name" placeholder="Ex: Internet, Loyer..."
+                                        <label for="name" class="sr-only">Nom</label>
+                                        <input type="text" id="name" name="name" placeholder="Ex: Internet, Loyer..."
                                             class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all font-medium placeholder-slate-400">
                                     </div>
                                     <button type="submit"
@@ -133,40 +133,48 @@
                                 <div class="flex flex-wrap gap-3">
 
                                     <!-- Catégorie  -->
-                                    @isset($categories)
-                                    @forelse($categories as $category)
+                                    @forelse($colocation->categories as $category)
                                     <div
                                         class="inline-flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 group hover:bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-                                        <span class="px-2 text-sm font-semibold text-slate-700">{{ $category->name }}</span>
-                                        <div class="flex items-center ml-2 border-l border-slate-200 pl-2 gap-1">
-                                            <button
-                                                class="p-1 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
-                                                title="Modifier">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                            <button
-                                                class="p-1 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors"
-                                                title="Supprimer">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                    </path>
-                                                </svg>
-                                            </button>
+                                        <form action="{{ route('categories.update',$category) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div class="flex items-center ml-2 border-l border-slate-200 pl-2 gap-1">
+                                                <input type="text" name="categorie" value="{{ $category->name }}">
+                                                <button type="submit"
+                                                    class="p-1 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors"
+                                                    title="Modifier">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div class="inline-flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 group hover:bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+                                            <form action="{{ route('categories.destroy',$category) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    class="p-1 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors"
+                                                    title="Supprimer">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                     @empty
                                     <div class="text-sm text-slate-500 italic py-2">Aucune catégorie pour le moment.</div>
                                     @endforelse
-                                    @endisset
                                 </div>
                             </div>
                         </div>
@@ -185,7 +193,7 @@
 
                     <!-- Colonne de Gauche : Formulaire d'ajout -->
                     <div
-                        class="lg:col-span-1 lg:sticky lg:top-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        class="lg:col-span-1 lg:sticky lg:top-8 bg-black/15 rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
 
                         <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
                             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -200,17 +208,18 @@
                             </h2>
                         </div>
 
-                        <form class="p-6 space-y-5">
-
+                        <form class="p-6 space-y-5" action="{{ route('depenses.store')}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="colocation_id" value="{{ $colocation->id }}">
                             <!-- Montant -->
                             <div>
-                                <label for="amount" class="block text-sm font-semibold text-slate-700 mb-1.5">Montant
+                                <label for="montont" class="block text-sm font-semibold text-slate-700 mb-1.5">Montant
                                     Total</label>
                                 <div class="relative">
                                     <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center">
                                         <span class="text-slate-400 font-medium sm:text-lg">€</span>
                                     </div>
-                                    <input type="number" id="amount" placeholder="0.00"
+                                    <input type="number" name="montont" placeholder="0.00"
                                         class="block w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-lg font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all placeholder-slate-300"
                                         required>
                                 </div>
@@ -219,8 +228,8 @@
                             <!-- Titre -->
                             <div>
                                 <label for="title"
-                                    class="block text-sm font-semibold text-slate-700 mb-1.5">Description</label>
-                                <input type="text" id="title" placeholder="Ex: Courses Carrefour, Internet..."
+                                    class="block text-sm font-semibold text-slate-700 mb-1.5">Titre</label>
+                                <input type="text" name="title" placeholder="Ex: Courses Carrefour, Internet..."
                                     class="block w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
                                     required>
                             </div>
@@ -230,20 +239,21 @@
                                 <div>
                                     <label for="date"
                                         class="block text-sm font-semibold text-slate-700 mb-1.5">Date</label>
-                                    <input type="date" id="date" value="2026-02-26"
+                                    <input type="date" name="date" value="2026-02-26"
                                         class="block w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all text-slate-500"
                                         required>
                                 </div>
                                 <div>
                                     <label for="category"
                                         class="block text-sm font-semibold text-slate-700 mb-1.5">Catégorie</label>
-                                    <select id="category"
+                                    <select id="category" name="category"
                                         class="block w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all appearance-none">
-                                        <option>Alimentation</option>
-                                        <option>Loyer</option>
-                                        <option>Électricité / Gaz</option>
-                                        <option>Internet</option>
-                                        <option>Autre</option>
+                                        @isset($colocation->categories)
+                                        @foreach($colocation->categories as $category)
+                                        <option value="{{ $category->id }}"> {{ $category->name }} </option>
+                                        @endforeach
+                                        @endisset
+
                                     </select>
                                 </div>
                             </div>
@@ -251,54 +261,22 @@
                             <!-- Payeur -->
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Payé par</label>
-                                <div class="flex gap-3">
+                                <div class="flex gap-3 flex-wrap">
+                                    @forelse($colocation->users as $user)
                                     <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="payer" class="peer sr-only" checked>
+                                        <input type="radio" name="payer" class="peer sr-only" value="{{ $user->id }}" checked>
                                         <div
-                                            class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center hover:bg-slate-50 peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition-all">
-                                            <span class="text-sm font-bold">Moi</span>
+                                            class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center hover:bg-slate-50 peer-checked:border-brand-700 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition-all">
+                                            <span class="text-sm font-bold">{{ $user->firstname }} {{ $user->lastname }}</span>
                                         </div>
                                     </label>
-                                    <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="payer" class="peer sr-only">
-                                        <div
-                                            class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center hover:bg-slate-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition-all">
-                                            <span class="text-sm font-bold">Marie</span>
-                                        </div>
-                                    </label>
-                                    <label class="flex-1 cursor-pointer">
-                                        <input type="radio" name="payer" class="peer sr-only">
-                                        <div
-                                            class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center hover:bg-slate-50 peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-700 transition-all">
-                                            <span class="text-sm font-bold">Lucas</span>
-                                        </div>
-                                    </label>
+                                    @empty
+                                    <p> there is no user </p>
+                                    @endforelse
+
                                 </div>
                             </div>
 
-                            <!-- Répartition -->
-                            <div class="pt-2">
-                                <div class="flex items-center justify-between mb-2">
-                                    <label class="block text-sm font-semibold text-slate-700">Pour qui ?</label>
-                                    <span
-                                        class="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded">Partage
-                                        équitable</span>
-                                </div>
-                                <div class="flex -space-x-2 overflow-hidden mb-1">
-                                    <div
-                                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-brand-100 text-brand-600 text-xs font-bold flex items-center justify-center shadow-sm">
-                                        JD</div>
-                                    <div
-                                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-blue-100 text-blue-600 text-xs font-bold flex items-center justify-center shadow-sm">
-                                        M</div>
-                                    <div
-                                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-purple-100 text-purple-600 text-xs font-bold flex items-center justify-center shadow-sm">
-                                        L</div>
-                                </div>
-                                <button type="button"
-                                    class="text-xs font-semibold text-slate-500 hover:text-brand-600 transition-colors">Modifier
-                                    la répartition...</button>
-                            </div>
 
                             <div class="pt-4">
                                 <button type="submit"
@@ -356,7 +334,9 @@
                                     <tbody class="divide-y divide-slate-100">
 
                                         <!-- Row 1 (Positif - Payé par Moi) -->
-                                        <tr class="hover:bg-slate-50/50 transition-colors group">
+                                        @isset($colocation->depenses)
+                                        @forelse($colocation->depenses as $depenses)
+                                        <tr class="hover:bg-slate-200 transition-colors group">
                                             <td class="px-5 py-4">
                                                 <div class="flex items-center gap-4">
                                                     <div
@@ -370,14 +350,19 @@
                                                         </svg>
                                                     </div>
                                                     <div>
-                                                        <p class="text-sm font-bold text-slate-900 mb-0.5">Courses
-                                                            hebdomadaires</p>
+                                                        <p class="text-sm font-bold text-slate-900 mb-0.5">{{ $depenses->title }}</p>
                                                         <div
                                                             class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                            <span>26 Fév 2026</span>
+                                                            <span>{{ $depenses->date_pose }}</span>
                                                             <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
                                                             <span
-                                                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">Alimentation</span>
+                                                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                                                                @foreach($colocation->categories as $category)
+                                                                @if($depenses->category_id == $category->id)
+                                                                {{ $category->name }}
+                                                                @endif
+                                                                @endforeach
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -385,15 +370,19 @@
                                             <td class="px-5 py-4 align-middle">
                                                 <span
                                                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-brand-50 text-brand-700 border border-brand-100">
-                                                    Moi
+                                                    @foreach($colocation->users as $usere)
+                                                    @if($depenses->user_id == $usere->id)
+                                                    {{ $usere-> firstname }} {{ $usere-> lastname }}
+                                                    @endif
+                                                    @endforeach
                                                 </span>
                                             </td>
                                             <td class="px-5 py-4 text-right align-middle">
-                                                <span class="text-base font-extrabold text-slate-900 block">124.50
+                                                <span class="text-base font-extrabold text-slate-900 block">{{ $depenses->montont }}
                                                     €</span>
                                                 <!-- Vert car l'utilisateur a payé pour le groupe -->
                                                 <span class="text-xs text-brand-600 font-bold block mt-0.5">Vous prêtez
-                                                    83.00 €</span>
+                                                    {{  number_format($depenses->montont/count($colocation->users),2) }}€</span>
                                             </td>
                                             <td class="px-5 py-4 align-middle">
                                                 <div
@@ -412,162 +401,30 @@
                                                             </path>
                                                         </svg>
                                                     </button>
-                                                    <button
-                                                        class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                                                        title="Supprimer">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
+                                                    <form action="{{ route('depenses.destroy',$depenses) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                                                            title="Supprimer">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
-
-                                        <!-- Row 2 (Négatif - Payé par Un Autre) -->
-                                        <tr class="hover:bg-slate-50/50 transition-colors group">
-                                            <td class="px-5 py-4">
-                                                <div class="flex items-center gap-4">
-                                                    <div
-                                                        class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0">
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                                        </svg>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-sm font-bold text-slate-900 mb-0.5">Facture
-                                                            Électricité</p>
-                                                        <div
-                                                            class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                            <span>24 Fév 2026</span>
-                                                            <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                                                            <span
-                                                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">Électricité
-                                                                / Gaz</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-5 py-4 align-middle">
-                                                <span
-                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100">
-                                                    Marie
-                                                </span>
-                                            </td>
-                                            <td class="px-5 py-4 text-right align-middle">
-                                                <span class="text-base font-extrabold text-slate-900 block">65.00
-                                                    €</span>
-                                                <!-- Rouge car l'utilisateur doit cette somme = Dette -->
-                                                <span class="text-xs text-red-600 font-bold block mt-0.5">Vous devez
-                                                    21.66 €</span>
-                                            </td>
-                                            <td class="px-5 py-4 align-middle">
-                                                <div
-                                                    class="flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button
-                                                        class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                                                        title="Détails">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                                            </path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                    <button
-                                                        class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                                                        title="Supprimer">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                        @empty
+                                        <tr class="hover:bg-slate-200 transition-colors group">
+                                            <p> aucune depenses ajouter votre ! </p>
                                         </tr>
-
-                                        <!-- Row 3 (Personnel / Non partagé) -->
-                                        <tr class="hover:bg-slate-50/50 transition-colors group">
-                                            <td class="px-5 py-4">
-                                                <div class="flex items-center gap-4">
-                                                    <div
-                                                        class="w-10 h-10 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center flex-shrink-0">
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0">
-                                                            </path>
-                                                        </svg>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-sm font-bold text-slate-900 mb-0.5">Abonnement
-                                                            Box Internet</p>
-                                                        <div
-                                                            class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                            <span>15 Fév 2026</span>
-                                                            <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                                                            <span
-                                                                class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">Internet</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-5 py-4 align-middle">
-                                                <span
-                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-purple-50 text-purple-700 border border-purple-100">
-                                                    Lucas
-                                                </span>
-                                            </td>
-                                            <td class="px-5 py-4 text-right align-middle">
-                                                <span class="text-base font-extrabold text-slate-900 block">30.00
-                                                    €</span>
-                                                <span class="text-xs text-red-600 font-bold block mt-0.5">Vous devez
-                                                    10.00 €</span>
-                                            </td>
-                                            <td class="px-5 py-4 align-middle">
-                                                <div
-                                                    class="flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button
-                                                        class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                                                        title="Détails">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-                                                            </path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                    <button
-                                                        class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                                                        title="Supprimer">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @endforelse
+                                        @endisset
 
                                     </tbody>
                                 </table>

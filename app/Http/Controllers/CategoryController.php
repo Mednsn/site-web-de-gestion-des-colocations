@@ -12,7 +12,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-       //
+        //
     }
 
     /**
@@ -28,11 +28,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'=> 'required',
-            'colocation_id'=> 'required',
+        $request->validate([
+            'name' => 'required',
+            'colocation_id' => 'required',
         ]);
-        Category::created($validated);
+        Category::create([
+            'name' => $request->name,
+            'colocation_id' => $request->colocation_id,
+        ]);
         return back();
     }
 
@@ -57,7 +60,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'categorie' => 'required',
+        ]);
+        $category->update(['name'=>$validated['categorie']]);
+        return back();
     }
 
     /**

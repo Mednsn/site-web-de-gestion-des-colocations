@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocataireController;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\DepenseController;
@@ -32,12 +33,15 @@ Route::get('colocation/{colocation_id}/detaile', [DetaileController::class, 'ind
 
 Route::delete('destroy')->name('colocataire.destroy');
 
-Route::get('depenses',[DepenseController::class,'index'])->name('depenses.index');
 Route::get('depenses/create',[DepenseController::class,'create'])->name('depenses.create');
 Route::get('depenses/{colocation}',[DepenseController::class,'show'])->name('depenses.show');
-Route::get('depenses/store',[DepenseController::class,'store'])->name('depenses.store');
+Route::post('depenses/store',[DepenseController::class,'store'])->name('depenses.store');
 Route::get('depenses/update',[DepenseController::class,'update'])->name('depenses.update');
-Route::get('depenses/edit',[DepenseController::class,'edit'])->name('depenses.edit');
+Route::delete('depenses/{depense}',[DepenseController::class,'destroy'])->name('depenses.destroy');
+
+Route::post('categories/store',[CategoryController::class,'store'])->name('categories.store');
+Route::delete('categories/{category}',[CategoryController::class,'destroy'])->name('categories.destroy');
+Route::patch('categories/{category}',[CategoryController::class,'update'])->name('categories.update');
 
 // Route::get('balences',[]);
 require __DIR__ . '/auth.php';

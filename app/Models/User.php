@@ -70,6 +70,10 @@ class User extends Authenticatable
             ->withPivot(['id', 'is_owner', 'is_active'])
             ->withTimestamps();
     }
+    public function depenses()
+    {
+        return $this->hasMany(Depense::class);
+    }
     public function paiement()
     {
         return $this->hasMany(Paiement::class);
