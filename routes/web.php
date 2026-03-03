@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BallancesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocataireController;
 use App\Http\Controllers\ColocationController;
@@ -49,4 +50,6 @@ Route::get('invitations/{token}',[InvitationController::class,'index'])->name('i
 
 Route::post('acceptation',[ColocataireController::class,'store'])->name('coloctaire.store');
 
+Route::get('solde/{colocation}',[BallancesController::class,'index'])->name('ballances.index');
+Route::patch('/paiement/{paiement_id}/pay', [BallancesController::class, 'pay'])->name('paiement.pay');
 require __DIR__ . '/auth.php';

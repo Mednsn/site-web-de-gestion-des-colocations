@@ -14,9 +14,18 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    },
                     colors: {
-                        brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 900: '#14532d' }
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d'
+                        }
                     }
                 }
             }
@@ -114,57 +123,68 @@
                         </div>
 
                         <!-- Card Dette Active -->
-                        <div
-                            class="bg-white rounded-2xl shadow-sm border-2 border-red-100 p-6 relative overflow-hidden group">
-                            <!-- Visual Rouge discret -->
-                            <div
-                                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-50 to-transparent -z-0">
-                            </div>
+                        @isset($mesDettes)
+                        @foreach($mesDettes as $datte)
+                        <div class="bg-white rounded-2xl shadow-lg border border-red-100 p-6 relative overflow-hidden group hover:shadow-xl transition-shadow duration-300">
 
-                            <div class="flex justify-between items-start mb-6 relative z-10">
+                            <!-- Header -->
+                            <div class="flex justify-between items-start mb-4 relative z-10">
                                 <div class="flex gap-4 items-center">
-                                    <div
-                                        class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl ring-4 ring-white shadow-sm">
-                                        M</div>
+                                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl ring-2 ring-white shadow-sm">
+                                        {{ mb_substr($datte['user_firstname'],0,1) }}{{ mb_substr($datte['user_lastname'],0,1) }}
+                                    </div>
                                     <div>
                                         <p class="text-sm font-semibold text-slate-500">Vous devez à</p>
-                                        <h3 class="text-lg font-bold text-slate-900 leading-tight">Marie</h3>
+                                        <h3 class="text-lg font-bold text-slate-900">{{ $datte['user_firstname'] }} {{ $datte['user_lastname'] }}</h3>
                                     </div>
                                 </div>
-                                <div class="bg-red-50 text-red-700 px-3 py-1.5 rounded-lg border border-red-100">
-                                    <span class="text-2xl font-black tracking-tight">21.66<span
-                                            class="text-base text-red-500 ml-0.5">€</span></span>
+
+                                <!-- Montant -->
+                                <div class="bg-red-50 text-red-700 px-4 py-2 rounded-lg border border-red-100 flex items-center justify-center">
+                                    <span class="text-2xl font-black">{{ number_format($datte['montant'],2) }}<span class="text-base text-red-500 ml-1">€</span></span>
                                 </div>
                             </div>
 
-                            <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
-                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Concerne :
-                                </p>
-                                <ul class="space-y-1.5 text-sm font-medium text-slate-700">
+                            <!-- Depense details -->
+                            <div class="bg-slate-50 rounded-xl p-4 mb-4 border border-slate-100">
+                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Concerne :</p>
+                                <ul class="space-y-1 text-sm font-medium text-slate-700">
                                     <li class="flex justify-between">
-                                        <span>Facture Électricité</span>
-                                        <span class="text-slate-500 opacity-70">21.66 €</span>
+                                        <span>{{ $datte['depense_titre'] }}</span>
+                                        <span class="text-slate-500 opacity-80">{{ number_format($datte['montant'],2) }} €</span>
                                     </li>
                                 </ul>
                             </div>
 
-                            <div class="flex gap-3 relative z-10">
-                                <button
-                                    class="flex-[2] bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-slate-900/10 transition-all flex items-center justify-center gap-2">
+                            <!-- Actions -->
+                            <div class="flex w-full gap-3 relative z-10">
+                                @if($datte['status'] === 'pending')
+                                <form action="{{ route('paiement.pay', $datte['paiement_id']) }}" method="POST" class="flex-1">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                        class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold text-sm shadow-md transition-colors flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                        Payer {{ $datte['user_firstname'] }}
+                                    </button>
+                                </form>
+                                @else
+                                <button type="button"
+                                    class="w-full bg-green-600 text-white py-3 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 cursor-not-allowed">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
-                                        </path>
+                                            d="M5 13l4 4L19 7"></path>
                                     </svg>
-                                    Payer Marie
+                                    Paiement effectue
                                 </button>
-                                <button
-                                    class="flex-1 bg-white border border-slate-200 hover:bg-slate-50 hover:text-red-600 text-slate-600 font-bold py-3 rounded-xl text-sm transition-colors text-center"
-                                    title="Marquer comme payé hors de l'application">
-                                    Marquer payé
-                                </button>
+                                @endif
                             </div>
                         </div>
+                        @endforeach
+                        @endisset
 
                     </div>
 

@@ -62,7 +62,7 @@
                                 Colocations</a>
                             <a href="#"
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Dépenses</a>
-                            <a href="balances.html"
+                            <a href="{{ route('ballances.index',$colocation) }}"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
                         </nav>
                     </div>

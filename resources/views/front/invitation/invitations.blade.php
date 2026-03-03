@@ -27,7 +27,7 @@
         <div class="flex justify-between gap-4 w-full">
 
             <!-- Refuser -->
-            <form action="">
+            <form action="/">
                 <button class="w-full p-10 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-xl transition duration-300">
                     Refuser
                 </button>

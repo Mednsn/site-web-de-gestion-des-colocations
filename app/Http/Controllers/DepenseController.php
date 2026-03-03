@@ -28,7 +28,7 @@ class DepenseController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'title' => 'required',
             'montont' => 'required',
             'date' => 'required',
@@ -44,6 +44,7 @@ class DepenseController extends Controller
             'user_id' => $request->payer,
             'colocation_id' => $request->colocation_id,
         ]);
+        
         return back();
     }
 
@@ -64,7 +65,7 @@ class DepenseController extends Controller
                 };
             };
         };
-        
+
         $colocations = Colocation::with('users', 'depenses', 'categories')->where('colocations.id', $colocation->id)->first();
 
 
