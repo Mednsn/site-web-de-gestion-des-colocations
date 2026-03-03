@@ -17,8 +17,17 @@ class DetaileController extends Controller
     {
         $user = Auth::user();
         $colocation = Colocation::find($request->colocation_id);
-    
-        return view('front/colocations/detaile', compact('user','colocation'));
+        foreach ($colocation->users as $users) {
+            if ($users->id == $user->id) {
+
+                    if ($users->colocataires->is_owner == 1) {
+                        $isOwner = 1;
+                    } else {
+                        $isOwner = 0;
+                    };
+            };
+        };
+        return view('front/colocations/detaile', compact('user', 'colocation'));
     }
 
 
