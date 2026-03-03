@@ -145,7 +145,7 @@
                             class="border-brand-500 text-brand-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Membres & Paramètres
                         </a>
-                        
+
                         <form action=""></form>
                         <a href="{{ route('depenses.show',$colocation) }}"
                             class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
@@ -183,13 +183,32 @@
                                             {{ mb_substr($member->firstname, 0, 1)  }} {{ mb_substr($member->lastname, 0, 1)  }}
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900"><span class="font-bold text-red-900">{{ $member->firstname }} {{ $member->lastname }}</span></p>
+                                            <p class="font-bold text-slate-900">
+                                                <span class="font-bold text-red-900">
+                                                    {{ $member->firstname }} {{ $member->lastname }}
+                                                </span>
+                                            </p>
                                             <p class="text-sm text-slate-500">{{ $member->email }}</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-3">
+
+                                    <div class="flex items-center gap-4">
+
+                                        <!-- Reputation -->
+                                        <div class="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+                                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.966a1 1 0 00.95.69h4.173c.969 0 1.371 1.24.588  1.81l-3.376 2.454a1 1 0  00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.376-2.454a1 
+                                                         1 0 00-1.175 0l-3.376 2.454c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.98 9.393c-.783-.57-.38-1.81.588-1.81h4.173a1  1 0 00.95-.69l1.286-3.966z" />
+                                            </svg>
+                                            <span class="text-xs font-bold text-green-600">{{ $member->reputation }}</span>
+                                        </div>
+
+                                        <!-- Role -->
                                         <span
-                                            class="bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1 rounded border border-slate-200">Owner</span>
+                                            class="bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1 rounded border border-slate-200">
+                                            Owner
+                                        </span>
+
                                     </div>
                                 </li>
                                 @else
@@ -201,15 +220,28 @@
                                             {{ mb_substr($member->firstname, 0, 1)  }} {{ mb_substr($member->lastname, 0, 1)  }}
                                         </div>
                                         <div>
-                                            <p class="font-bold text-slate-900">{{ $member->firstname }} {{ $member->lastname }}</p>
+                                            <p class="font-bold text-slate-900">
+                                                {{ $member->firstname }} {{ $member->lastname }}
+                                            </p>
                                             <p class="text-sm text-slate-500">{{ $member->email }}</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-3">
+
+                                    <div class="flex items-center gap-4">
+
+                                        <!-- Reputation -->
+                                        <div class="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+                                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.966a1  1 0 00.95.69h4.173c.969 0 1.371 1.24.588  1.81l-3.376 2.454a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.376-2.454a1  1 0 00-1.175 0l-3.376 2.454c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.98 9.393c-.783-.57-.38-1.81.588-1.81h4.173a1 1 0 00.95-.69l1.286-3.966z" />
+                                            </svg>
+                                            <span class="text-xs font-bold text-green-600">{{ $member->reputation }}</span>
+                                        </div>
+
+                                        <!-- Delete Button -->
                                         <form action="{{ route('colocataire.destroy',$member->colocataires) }}" method="POST">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" onclick="return confime('are you sure ?')"
+                                            <button type="submit" onclick="return confirm('are you sure ?')"
                                                 class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
                                                 title="Retirer de la coloc">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,6 +251,7 @@
                                                 </svg>
                                             </button>
                                         </form>
+
                                     </div>
                                 </li>
                                 @endif
@@ -233,6 +266,7 @@
                     </div>
 
                     <!-- Colonne droite : Inviter & Infos -->
+                     @if($isOwner == 1)
                     <div class="space-y-6">
 
                         <!-- Bloc Inviter -->
@@ -263,7 +297,7 @@
                                         <input type="email" name="email" required placeholder="adresse@email.com"
                                             class="w-full rounded-xl border-slate-300 shadow-sm focus:border-brand-500 focus:ring-brand-500 transition-colors sm:text-sm px-4 py-2.5 border bg-slate-50 focus:bg-white outline-none">
                                     </div>
-                                    <button type="submit" 
+                                    <button type="submit"
                                         class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl transition-colors shadow-sm flex justify-center items-center gap-2">
                                         Envoyer l'invitation
                                     </button>
@@ -288,6 +322,7 @@
                         </div>
 
                     </div>
+                    @endif
                 </div>
 
             </div>

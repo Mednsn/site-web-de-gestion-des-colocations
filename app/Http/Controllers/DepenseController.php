@@ -29,23 +29,23 @@ class DepenseController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'title'=>'required',
-            'montont'=>'required',
-            'date'=>'required',
-            'payer'=>'required',
-            'category'=>'required',
-            'colocation_id'=>'required',
-            ]);
-        Depense::create([
-            'title'=>$request->title,
-            'montont'=>$request->montont,
-            'date_pose'=>$request->date,
-            'category_id'=>$request->category,
-            'user_id'=>$request->payer,
-            'colocation_id'=>$request->colocation_id,
+            'title' => 'required',
+            'montont' => 'required',
+            'date' => 'required',
+            'payer' => 'required',
+            'category' => 'required',
+            'colocation_id' => 'required',
         ]);
-        return back();  
-}
+        Depense::create([
+            'title' => $request->title,
+            'montont' => $request->montont,
+            'date_pose' => $request->date,
+            'category_id' => $request->category,
+            'user_id' => $request->payer,
+            'colocation_id' => $request->colocation_id,
+        ]);
+        return back();
+    }
 
     /**
      * Display the specified resource.
@@ -56,20 +56,19 @@ class DepenseController extends Controller
 
         foreach ($colocation->users as $member) {
             if ($member->id == $user->id) {
-              $isOwner = 1;
-            }else{
-              $isOwner = 0;
-            }
-            
+
+                if ($member->colocataires->is_owner == 1) {
+                    $isOwner = 1;
+                } else {
+                    $isOwner = 0;
+                };
+            };
         };
-        $colocations = Colocation::with('users','depenses','categories')->where('colocations.id',$colocation->id)->first();
+        
+        $colocations = Colocation::with('users', 'depenses', 'categories')->where('colocations.id', $colocation->id)->first();
 
-    // foreach($colocations->depenses as $depense ){
-    //     echo ($depense->users);
-    // }
-    // dd($colocations->categories[0]->depenses[0]->user_id);exit;
 
-        return view('front/depenses/depenses', compact('user', 'colocation','isOwner'));
+        return view('front/depenses/depenses', compact('user', 'colocation', 'isOwner'));
     }
 
     /**
