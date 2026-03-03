@@ -60,7 +60,7 @@
                             <a href="colocations.html"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Mes
                                 Colocations</a>
-                            <a href="expenses.html"
+                            <a href="{{ route('depenses.show',$colocation) }}"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
                             <a href="balances.html"
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Soldes</a>
@@ -72,7 +72,7 @@
                         <div class="hidden sm:flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
                             <div
                                 class="px-3 py-1 bg-white shadow-sm rounded-md text-sm font-bold text-slate-800 flex items-center gap-2 cursor-pointer">
-                                <span class="w-2 h-2 rounded-full bg-brand-500"></span> Appart Gambetta
+                                <span class="w-2 h-2 rounded-full bg-brand-500"></span> {{$colocation->name}}
                             </div>
                         </div>
 

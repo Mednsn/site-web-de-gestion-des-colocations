@@ -24,10 +24,10 @@ class BallancesController extends Controller
         $user = Auth::user();
         $mesDettes = [];
 
-        $colocation = Colocation::with('users')->findOrFail($colocation->id);
-        $membersCount = $colocation->users->count();
+        $colocations = Colocation::with('users')->findOrFail($colocation->id);
+        $membersCount = $colocations->users->count();
 
-        $depenses = Depense::where('colocation_id', $colocation->id)->get();
+        $depenses = Depense::where('colocation_id', $colocations->id)->get();
 
         foreach ($depenses as $depense) {
             $part = $depense->montont / $membersCount;
@@ -56,7 +56,7 @@ class BallancesController extends Controller
             }
         }
 
-        return view('front.ballances.ballance', compact('mesDettes', 'user'));
+        return view('front.ballances.ballance', compact('colocation','mesDettes', 'user'));
     }
 
     /**
@@ -64,10 +64,8 @@ class BallancesController extends Controller
      */
     public function pay($paiement_id)
     {
-        dd("etgdc");
         $paiement = Paiement::findOrFail($paiement_id);
 
-        // Security: vérifier que c'est bien le user qui doit payer
         if ($paiement->user_id !== Auth::id()) {
             abort(403);
         }

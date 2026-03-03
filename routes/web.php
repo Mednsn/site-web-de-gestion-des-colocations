@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BallancesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocataireController;
@@ -20,6 +21,13 @@ Route::get('/home', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'banned', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.index');
+    Route::patch('/admin/dashboar/ban/{id}', [AdminController::class, 'ban'])->name('admin.ban');
+    Route::patch('/admin/dashboar/promote/{id}', [AdminController::class, 'promote'])->name('admin.promote');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -52,4 +60,6 @@ Route::post('acceptation',[ColocataireController::class,'store'])->name('colocta
 
 Route::get('solde/{colocation}',[BallancesController::class,'index'])->name('ballances.index');
 Route::patch('/paiement/{paiement_id}/pay', [BallancesController::class, 'pay'])->name('paiement.pay');
+
+
 require __DIR__ . '/auth.php';
