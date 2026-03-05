@@ -27,6 +27,7 @@ class DetaileController extends Controller
                     };
             };
         };
+
         return view('front/colocations/detaile', compact('user', 'colocation','isOwner'));
     }
 

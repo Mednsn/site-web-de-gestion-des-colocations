@@ -64,6 +64,10 @@
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
                             <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
+                            @if($user->role_id == 1)
+                            <a href="{{ route('admin.index') }}"
+                                class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Utilisateurs</a>
+                            @endif
                         </nav>
                     </div>
 
@@ -240,7 +244,7 @@
                                         <!-- Delete Button -->
                                         <form action="{{ route('colocataire.destroy',$member->colocataires) }}" method="POST">
                                             @csrf
-                                            @method('delete')
+                                            @method('DELETE')
                                             <button type="submit" onclick="return confirm('are you sure ?')"
                                                 class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
                                                 title="Retirer de la coloc">
@@ -266,7 +270,7 @@
                     </div>
 
                     <!-- Colonne droite : Inviter & Infos -->
-                     @if($isOwner == 1)
+                    @if($isOwner == 1)
                     <div class="space-y-6">
 
                         <!-- Bloc Inviter -->

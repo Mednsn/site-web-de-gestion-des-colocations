@@ -30,9 +30,6 @@ class ColocataireController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::check()) {
-            return redirect()->route('register')->with('error', 'vous devez vous connecter pour accider  cette colocation.');
-        }
 
         $colocation = Colocation::whereHas('invitations', function ($query) use ($request) {
             $query->where('token', $request->token);
@@ -45,19 +42,17 @@ class ColocataireController extends Controller
         $colocation = Colocation::with('users')->find($colocation->id);
 
         $isExist = $colocation->users->contains('id', Auth::id());
-        if (!$isExist) {
-            return redirect()->route('register')->with('error', 'vous n\'etes pas membre de cette colocation.');
-        }
 
+        if ($isExist) {
+            return redirect()->route('detaille.index', $colocation->id);
+        }
         Colocataire::create([
             'is_owner' => false,
             'is_active' => true,
             'user_id' => Auth::id(),
             'colocation_id' => $colocation->id,
         ]);
-
-        return redirect()->route('detaille.index', $colocation->id)
-            ->with('success', 'Bienvenue dans la colocation !');
+        return redirect()->route('detaille.index', $colocation->id);
     }
 
     /**
@@ -89,8 +84,15 @@ class ColocataireController extends Controller
      */
     public function destroy(Colocataire $colocataire)
     {
-        echo "est deleted mais faut des condition";
-        exit;
-        $colocataire->delete();
+        $coloc = Colocation::find($colocataire->colocation_id);
+        foreach ($coloc->users as $user) {
+            if ($user->id == Auth::id()) {
+                if ($user->colocataires->is_owner == 1) {
+                    $colocataire->delete();
+                    return back();
+                }
+            }
+        }
+        return back();
     }
 }

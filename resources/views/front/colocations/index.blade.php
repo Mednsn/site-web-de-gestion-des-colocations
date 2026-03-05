@@ -65,6 +65,10 @@
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
                             <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
+                            @if($user->role_id == 1)
+                            <a href="{{ route('admin.index') }}"
+                                class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Utilisateurs</a>
+                            @endif
                         </nav>
                     </div>
 
@@ -107,12 +111,12 @@
                         </div>
                         @if($nbr_colocation_active < 1)
                             <a href="{{ route('colocation.create') }}"
-                                class="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 text-sm">
-                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                Nouvelle Coloc
+                            class="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 text-sm">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Nouvelle Coloc
                             </a>
                             @endif
                     </div>
@@ -122,7 +126,7 @@
 
                         <!-- Coloc Card 1 (Owner) -->
                         @forelse($colocations as $colocation)
-                        @if($colocation->is_owner == 1)
+                        @if($isOwner == 1)
                         <div
                             class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-brand-200 hover:shadow-md transition-all flex flex-col h-full group relative overflow-hidden">
                             <!-- Déco graphique -->

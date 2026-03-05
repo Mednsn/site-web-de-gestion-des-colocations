@@ -8,6 +8,7 @@ use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\DetaileController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'banned', 'admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.index');
     Route::patch('/admin/dashboar/ban/{id}', [AdminController::class, 'ban'])->name('admin.ban');
     Route::patch('/admin/dashboar/promote/{id}', [AdminController::class, 'promote'])->name('admin.promote');
@@ -41,7 +42,7 @@ Route::put('colocation/{colocation}/update', [ColocationController::class, 'upda
 Route::get('colocation/{colocation}/edit', [ColocationController::class, 'edit'])->name('colocation.edit');
 Route::get('colocation/{colocation_id}/detaile', [DetaileController::class, 'index'])->name('detaille.index');
 
-Route::delete('destroy')->name('colocataire.destroy');
+Route::delete('colocataire/{colocataire}',[ColocataireController::class,'destroy'])->name('colocataire.destroy');
 
 Route::get('depenses/create',[DepenseController::class,'create'])->name('depenses.create');
 Route::get('depenses/{colocation}',[DepenseController::class,'show'])->name('depenses.show');
@@ -54,12 +55,17 @@ Route::delete('categories/{category}',[CategoryController::class,'destroy'])->na
 Route::patch('categories/{category}',[CategoryController::class,'update'])->name('categories.update');
 
 Route::post('invitations/{colocation}',[InvitationController::class,'store'])->name('invitation.store');
-Route::get('invitations/{token}',[InvitationController::class,'index'])->name('invitation.index');
+
+Route::get('invitations/{token}', [InvitationController::class, 'index'])
+    ->name('invitation.index')
+    ->middleware('auth');
 
 Route::post('acceptation',[ColocataireController::class,'store'])->name('coloctaire.store');
 
 Route::get('solde/{colocation}',[BallancesController::class,'index'])->name('ballances.index');
-Route::patch('/paiement/{paiement_id}/pay', [BallancesController::class, 'pay'])->name('paiement.pay');
+Route::post('/paiement/{paiement_id}/pay', [PaiementController::class, 'checkout'])->name('paiement.checkout');
+Route::get('/paiement', [PaiementController::class, 'cancel'])->name('paiement.cancel');
 
+Route::get('/paiement/{paiement_id}/pay', [BallancesController::class, 'pay'])->name('paiement.pay');
 
 require __DIR__ . '/auth.php';

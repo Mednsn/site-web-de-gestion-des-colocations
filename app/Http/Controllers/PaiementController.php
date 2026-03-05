@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Paiement;
 use Illuminate\Http\Request;
+use Stripe\Checkout\Session;
+use Stripe;
 
 class PaiementController extends Controller
 {
@@ -15,12 +17,44 @@ class PaiementController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function checkout($paiement_id)
     {
-        //
+        $paiement = Paiement::find($paiement_id);
+        $montant = number_format(($paiement->montont),2);
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'mad',
+                    'product_data' => [
+                        'name' =>'chambre # ',
+                    ],
+                    'unit_amount' =>  $montant*100,
+                ],
+                'quantity' => 1,
+            ]],
+            "mode" => 'payment',
+            "success_url" => route('paiement.pay', [$paiement_id], true),
+            "cancel_url"  =>  route('paiement.cancel', [], true)
+        ]);
+
+        return redirect($session->url);
+    }
+
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function cancel()
+    {
+        return back();
+    }
+    public function pay($paiement_id)
+    {
+        return redirect()->route('ballances.index')->with('success' ,'payment success');
     }
 
     /**

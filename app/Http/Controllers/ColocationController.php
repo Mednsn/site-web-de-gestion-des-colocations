@@ -19,11 +19,24 @@ class ColocationController extends Controller
 
         $user = Auth::user();
 
-        $colocations = Colocation::whereHas('users', function ($query) use($user) {
+        $colocations = Colocation::whereHas('users', function ($query) use ($user) {
             $query->where('users.id',  $user->id);
         })->with('users')->get();
         $nbr_colocation_active = $this->selectUserColocation();
-        return view('front/colocations/index', compact('user', 'colocations', 'nbr_colocation_active'));
+        $isOwner=0;
+        foreach ($colocations as $colocation) {
+            foreach ($colocation->users as $member) {
+                if ($member->id == $user->id) {
+
+                    if ($member->colocataires->is_owner == 1) {
+                        $isOwner = 1;
+                    } else {
+                        $isOwner = 0;
+                    };
+                };
+            };
+        };
+        return view('front/colocations/index', compact('user', 'isOwner', 'colocations', 'nbr_colocation_active'));
     }
 
     public function selectUserColocation()

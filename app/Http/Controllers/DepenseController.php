@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Colocataire;
 use App\Models\Colocation;
 use App\Models\Depense;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,7 @@ class DepenseController extends Controller
         $request->validate([
             'title' => 'required',
             'montont' => 'required',
-            'date' => 'required',
+            'date' => 'required | date|before:tomorrow',
             'payer' => 'required',
             'category' => 'required',
             'colocation_id' => 'required',
@@ -44,7 +45,7 @@ class DepenseController extends Controller
             'user_id' => $request->payer,
             'colocation_id' => $request->colocation_id,
         ]);
-        
+
         return back();
     }
 
@@ -93,7 +94,12 @@ class DepenseController extends Controller
      */
     public function destroy(Depense $depense)
     {
-        $depense->delete();
-        return back();
+        $coloc = Colocataire::where('colocation_id',$depense->colocation_id)->where('user_id',Auth::id())->first();
+        if (Auth::id() == $depense->user_id || $coloc->is_owner == 1) {
+            $depense->delete();
+            return back();
+        }else{
+            return back();
+        }
     }
 }

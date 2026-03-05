@@ -64,6 +64,10 @@
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
                             <a href="balances.html"
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Soldes</a>
+                            @if($user->role_id == 1)
+                            <a href="{{ route('admin.index') }}"
+                                class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Utilisateurs</a>
+                            @endif
                         </nav>
                     </div>
 
@@ -99,6 +103,10 @@
                     </div>
                 </div>
 
+
+                @if(session('success'))
+                <p>{{ session('success') }}</p>
+                @endif
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
 
                     <!-- Colonne 1 : Mes Dettes (Rouge) -->
@@ -118,7 +126,7 @@
                             <div class="text-right">
                                 <span class="block text-xs font-semibold text-slate-500 uppercase tracking-widest">Total
                                     à payer</span>
-                                <span class="text-xl font-black text-red-600 tracking-tight">- 21.66 €</span>
+                                <span class="text-xl font-black text-red-600 tracking-tight">- {{ number_format($total,2) }} €</span>
                             </div>
                         </div>
 
@@ -159,9 +167,8 @@
                             <!-- Actions -->
                             <div class="flex w-full gap-3 relative z-10">
                                 @if($datte['status'] === 'pending')
-                                <form action="{{ route('paiement.pay', $datte['paiement_id']) }}" method="POST" class="flex-1">
+                                <form action="{{ route('paiement.checkout', $datte['paiement_id']) }}" method="POST" class="flex-1">
                                     @csrf
-                                    @method('PATCH')
                                     <button type="submit"
                                         class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold text-sm shadow-md transition-colors flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -64,6 +64,10 @@
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Dépenses</a>
                             <a href="{{ route('ballances.index',$colocation) }}"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
+                            @if($user->role_id == 1)
+                            <a href="{{ route('admin.index') }}"
+                                class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Utilisateurs</a>
+                            @endif
                         </nav>
                     </div>
 
@@ -207,7 +211,15 @@
                                 Ajouter une Dépense
                             </h2>
                         </div>
-
+                        @if ($errors->any())
+                        <div class="text-sm" style="color:red;">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                         <form class="p-6 space-y-5" action="{{ route('depenses.store')}}" method="POST">
                             @csrf
                             <input type="hidden" name="colocation_id" value="{{ $colocation->id }}">
@@ -382,7 +394,7 @@
                                                     €</span>
                                                 <!-- Vert car l'utilisateur a payé pour le groupe -->
                                                 <span class="text-xs text-brand-600 font-bold block mt-0.5">Vous prêtez
-                                                    {{  number_format($depenses->montont/count($colocation->users),2) }}€</span>
+                                                    {{ number_format($depenses->montont/count($colocation->users),2) }}€</span>
                                             </td>
                                             <td class="px-5 py-4 align-middle">
                                                 <div
@@ -404,7 +416,7 @@
                                                     <form action="{{ route('depenses.destroy',$depenses) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
+                                                        <button type="submit" onclick="return confirm('are you sure ?')"
                                                             class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                                                             title="Supprimer">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
@@ -420,9 +432,7 @@
                                             </td>
                                         </tr>
                                         @empty
-                                        <tr class="hover:bg-slate-200 transition-colors group">
-                                            <p> aucune depenses ajouter votre ! </p>
-                                        </tr>
+
                                         @endforelse
                                         @endisset
 

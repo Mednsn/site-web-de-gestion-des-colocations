@@ -29,6 +29,7 @@ class BallancesController extends Controller
 
         $depenses = Depense::where('colocation_id', $colocations->id)->get();
 
+        $total = 0;
         foreach ($depenses as $depense) {
             $part = $depense->montont / $membersCount;
             if ($depense->user_id != $user->id) {
@@ -53,10 +54,12 @@ class BallancesController extends Controller
                     'status' => $paiement->status,
 
                 ];
+                if ($paiement->status === "pending") {
+                    $total += $paiement->montont;
+                }
             }
         }
-
-        return view('front.ballances.ballance', compact('colocation','mesDettes', 'user'));
+        return view('front.ballances.ballance', compact('colocation','total','mesDettes', 'user'));
     }
 
     /**

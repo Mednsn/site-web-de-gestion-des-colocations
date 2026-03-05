@@ -19,7 +19,7 @@ class AdminController extends Controller
         // return view('back.adminDashboard',compact('users','admin')); public function index()
     
         $colocations = Colocation::all();
-        return view('adminDashboard', compact('users', 'colocations'));
+        return view('back.adminDashboard', compact('users','admin','colocations'));
     }
 
     public function ban($id)

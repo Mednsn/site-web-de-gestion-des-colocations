@@ -65,6 +65,10 @@
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
                             <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
+                            @if($admin->role_id == 1)
+                            <a href="{{ route('admin.index') }}"
+                                class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Utilisateurs</a>
+                            @endif
                         </nav>
                     </div>
 
@@ -92,60 +96,64 @@
 
         <!-- Main Content Scrollable -->
         <main class="flex-1 overflow-y-auto w-full pb-20">
-           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <h1 class="text-3xl font-bold text-slate-900 mb-6">Admin Dashboard - Gestion des Utilisateurs</h1>
+                <h1 class="text-3xl font-bold text-slate-900 mb-6">Admin Dashboard - Gestion des Utilisateurs</h1>
 
-    <table class="min-w-full divide-y divide-slate-200 border">
-        <thead class="bg-slate-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nom</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rôle</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Statut</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-slate-200">
-            @foreach($users as $user)
-            <tr>
-                <td class="px-6 py-4 text-sm text-slate-900">{{ $user->id }}</td>
-                <td class="px-6 py-4 text-sm text-slate-900">{{ $user->firstname }} {{ $user->lastname }}</td>
-                <td class="px-6 py-4 text-sm text-slate-900">{{ $user->email }}</td>
-                <td class="px-6 py-4 text-sm text-slate-900">
-                    {{ $user->is_admin ? 'Admin' : 'User' }}
-                </td>
-                <td class="px-6 py-4 text-sm text-slate-900">
-                    {{ $user->is_banned ? 'Banni' : 'Actif' }}
-                </td>
-                <td class="px-6 py-4 text-sm text-center flex justify-center gap-2">
-                    <!-- Ban / Unban -->
-                    <form action="{{ route('admin.ban', $user->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" 
-                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-semibold">
-                            {{ $user->is_banned ? 'Débannir' : 'Bannir' }}
-                        </button>
-                    </form>
+                <table class="min-w-full divide-y divide-slate-200 border">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nom</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Rôle</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Statut</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        @foreach($users as $user)
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-slate-900">{{ $user->id }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-900">{{ $user->firstname }} {{ $user->lastname }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-900">{{ $user->email }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-900">
+                                @if($user->role_id == 1)
+                                <p>admin</p>
+                                @else
+                                <p>user</p>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-900">
+                                {{ $user->is_banned ? 'Banni' : 'Actif' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-center flex justify-center gap-2">
+                                <!-- Ban / Unban -->
+                                <form action="{{ route('admin.ban', $user->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-semibold">
+                                        {{ $user->is_banned ? 'Débannir' : 'Bannir' }}
+                                    </button>
+                                </form>
 
-                    <!-- Promote / Demote -->
-                    <form action="{{ route('admin.promote', $user->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" 
-                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-semibold">
-                            {{ $user->is_admin ? 'Retrograder' : 'Promouvoir' }}
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                                <!-- Promote / Demote -->
+                                <form action="{{ route('admin.promote', $user->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-semibold">
+                                        {{ $user->is_admin ? 'Retrograder' : 'Promouvoir' }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-</div>
+            </div>
         </main>
     </div>
 
