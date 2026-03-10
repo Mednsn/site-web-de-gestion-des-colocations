@@ -54,6 +54,7 @@ class ColocataireController extends Controller
         ]);
         return redirect()->route('detaille.index', $colocation->id);
     }
+    
 
     /**
      * Display the specified resource.

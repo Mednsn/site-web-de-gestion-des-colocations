@@ -7,7 +7,6 @@ use App\Models\Colocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Mailer\Transport\Dsn;
 
 class ColocationController extends Controller
 {
@@ -58,6 +57,10 @@ class ColocationController extends Controller
     {
         $user = Auth::user();
         return view('front/colocations/create', compact('user'));
+    }
+    public function quitter($colocation)
+    {
+        dd("est quitter");
     }
 
     /**

@@ -43,7 +43,7 @@
                 <div class="flex justify-between h-16 items-center">
                     <!-- Nav Left -->
                     <div class="flex items-center gap-8">
-                        <a href="index.html" class="flex items-center gap-2 group">
+                        <a href="#" class="flex items-center gap-2 group">
                             <div
                                 class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shadow-sm group-hover:bg-brand-700 transition-colors">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,12 +57,12 @@
 
                         <!-- Desktop Links -->
                         <nav class="hidden md:flex gap-1">
-                            <a href="colocations.html"
+                            <a href="#."
                                 class="px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-semibold text-sm transition-colors">Mes
                                 Colocations</a>
-                            <a href="depenses.html"
+                            <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Dépenses</a>
-                            <a href="balances.html"
+                            <a href="#"
                                 class="px-4 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors">Soldes</a>
                         </nav>
                     </div>

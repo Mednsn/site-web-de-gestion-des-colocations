@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BallancesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColocataireController;
@@ -23,11 +23,15 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.index');
-    Route::patch('/admin/dashboar/ban/{id}', [AdminController::class, 'ban'])->name('admin.ban');
-    Route::patch('/admin/dashboar/promote/{id}', [AdminController::class, 'promote'])->name('admin.promote');
+Route::middleware(['auth','check.banned'])->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
 });
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,6 +47,7 @@ Route::get('colocation/{colocation}/edit', [ColocationController::class, 'edit']
 Route::get('colocation/{colocation_id}/detaile', [DetaileController::class, 'index'])->name('detaille.index');
 
 Route::delete('colocataire/{colocataire}',[ColocataireController::class,'destroy'])->name('colocataire.destroy');
+Route::get('colocataire/{colocation}',[ColocationController::class,'quitter'])->name('colocation.quitter');
 
 Route::get('depenses/create',[DepenseController::class,'create'])->name('depenses.create');
 Route::get('depenses/{colocation}',[DepenseController::class,'show'])->name('depenses.show');
@@ -63,9 +68,13 @@ Route::get('invitations/{token}', [InvitationController::class, 'index'])
 Route::post('acceptation',[ColocataireController::class,'store'])->name('coloctaire.store');
 
 Route::get('solde/{colocation}',[BallancesController::class,'index'])->name('ballances.index');
+Route::get('/paiement/{paiement_id}/pay', [BallancesController::class, 'pay'])->name('paiement.pay');
+
 Route::post('/paiement/{paiement_id}/pay', [PaiementController::class, 'checkout'])->name('paiement.checkout');
 Route::get('/paiement', [PaiementController::class, 'cancel'])->name('paiement.cancel');
 
-Route::get('/paiement/{paiement_id}/pay', [BallancesController::class, 'pay'])->name('paiement.pay');
+Route::get('admin', [UserController::class, 'index'])->name('admin.index');
+Route::patch('admin/{user}', [UserController::class, 'ban'])->name('admin.ban');
+
 
 require __DIR__ . '/auth.php';
